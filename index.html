@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -216,7 +217,7 @@
         const savedDuration = localStorage.getItem('selectedDuration');
         if (savedDuration) {
             duration = parseInt(savedDuration, 10);
-            document.getElementById("clickCounter").innerText = Duración: ${duration} segundos;
+            document.getElementById("clickCounter").innerText = `Duración: ${duration} segundos`;
             document.getElementById("defaultDuration").click(); // Selecciona el botón correspondiente
         } else {
             document.getElementById("defaultDuration").click(); // Configura por defecto en 3 segundos
@@ -224,7 +225,7 @@
 
         function setDuration(seconds) {
             duration = seconds;
-            document.getElementById("clickCounter").innerText = Duración: ${seconds} segundos;
+            document.getElementById("clickCounter").innerText = `Duración: ${seconds} segundos`;
             document.getElementById("clickButton").disabled = false;
             localStorage.setItem('selectedDuration', seconds); // Guarda la duración seleccionada
         }
@@ -257,14 +258,14 @@
             if (testActive) {
                 clickCount++;
                 const cps = (clickCount / duration).toFixed(2);
-                document.getElementById("clickCounter").innerText = Clics: ${clickCount};
+                document.getElementById("clickCounter").innerText = `Clics: ${clickCount}`;
                 document.getElementById("cpsDisplay").innerText = cps; 
                 
                 // Efecto de ripple
                 const ripple = document.createElement("div");
                 ripple.className = "ripple";
-                ripple.style.left = ${event.clientX - 50}px;
-                ripple.style.top = ${event.clientY - 50}px;
+                ripple.style.left = `${event.clientX - 50}px`;
+                ripple.style.top = `${event.clientY - 50}px`;
                 document.body.appendChild(ripple);
                 setTimeout(() => {
                     ripple.remove();
