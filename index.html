@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clicks por Segundo</title>
+    <title>CpsTest.es</title>
     <link rel="icon" href="cpstest.jpg" type="image/jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <style>
         /* Estilos CSS */
         * {
@@ -19,54 +20,60 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
             color: #fff;
             overflow: hidden;
         }
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffffff;
+        }
         .container {
             text-align: center;
-            padding: 30px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
+            padding: 40px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.3);
+            width: 500px; /* Aumenté aún más el ancho del contenedor */
+            margin-top: 100px;
+            backdrop-filter: blur(10px);
         }
         p {
             margin-bottom: 20px;
+            font-size: 1.2em;
         }
         .options button {
-            padding: 10px 20px;
+            padding: 15px 25px;
             margin: 10px;
-            font-size: 16px;
+            font-size: 18px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
-            background-color: #56c1c1;
+            background-color: #55efc4; /* Cambié el color del botón */
             color: #fff;
             transition: 0.3s;
             outline: none;
             user-select: none;
         }
         .options button:hover {
-            background-color: #3a9fa9;
+            background-color: #1dd1a1; /* Color al pasar el mouse */
         }
         #clickButton {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 30px 70px;
-            font-size: 28px;
+            padding: 20px 50px; /* Reducido padding para que el botón sea más pequeño */
+            font-size: 22px; /* Tamaño de fuente más pequeño */
             font-weight: bold;
             border: none;
             border-radius: 25px; 
-            background: linear-gradient(90deg, #f07f7f, #ffccbc); 
+            background: linear-gradient(90deg, #ff7675, #ff6b81); /* Botón más atractivo */
             color: #fff;
             cursor: pointer;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
@@ -76,7 +83,7 @@
             transition: background 0.3s, transform 0.2s;
         }
         #clickButton:hover {
-            background: linear-gradient(90deg, #e05d5d, #ffb3a1); 
+            background: linear-gradient(90deg, #e74c3c, #ff5a66); /* Hover del botón */
             transform: translateX(-50%) scale(1.05); 
         }
         #clickButton:disabled {
@@ -140,13 +147,13 @@
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
-            background-color: #f07f7f;
+            background-color: #ff7675;
             color: #fff;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .modal button:hover {
-            background-color: #e05d5d;
+            background-color: #e74c3c;
         }
         .animate {
             animation: fadeIn 1s ease-in-out;
@@ -164,17 +171,18 @@
     </style>
 </head>
 <body>
+    <h1>CpsTest.es</h1>
     <div class="container">
-        <h1>Test de Clicks por Segundo</h1>
-        <p>Selecciona la duración y luego haz clic en "¡Iniciar prueba!" para comenzar:</p>
+        <h2>Test de Clicks por Segundo</h2>
+        <p>Selecciona la duración y luego haz clic en "Iniciar"</p>
         
         <div class="options">
             <button onclick="setDuration(1)">1 segundo</button>
-            <button onclick="setDuration(3)">3 segundos</button>
+            <button onclick="setDuration(3)" id="defaultDuration">3 segundos</button>
             <button onclick="setDuration(5)">5 segundos</button>
         </div>
 
-        <div id="clickCounter">Duración: No seleccionada</div>
+        <div id="clickCounter">Duración: 3 segundos</div>
 
         <div id="statsDisplay" style="display: none;">
             <div>Tiempo restante: <span id="timeLeft"></span>s</div>
@@ -183,7 +191,7 @@
         </div>
     </div>
 
-    <button id="clickButton" onmousedown="startTest(event)" disabled>¡Iniciar prueba!</button>
+    <button id="clickButton" onmousedown="startTest(event)" disabled>Iniciar</button>
 
     <div id="modal" class="modal" style="display: none;">
         <div class="modal-content">
@@ -197,14 +205,25 @@
     <script>
         let clickCount = 0;
         let timer;
-        let duration = 0;
+        let duration = 3; // Establece la duración por defecto en 3 segundos
         let testActive = false;
         let timeLeft;
+
+        // Cargar la duración desde el almacenamiento local
+        const savedDuration = localStorage.getItem('selectedDuration');
+        if (savedDuration) {
+            duration = parseInt(savedDuration, 10);
+            document.getElementById("clickCounter").innerText = `Duración: ${duration} segundos`;
+            document.getElementById("defaultDuration").click(); // Selecciona el botón correspondiente
+        } else {
+            document.getElementById("defaultDuration").click(); // Configura por defecto en 3 segundos
+        }
 
         function setDuration(seconds) {
             duration = seconds;
             document.getElementById("clickCounter").innerText = `Duración: ${seconds} segundos`;
             document.getElementById("clickButton").disabled = false;
+            localStorage.setItem('selectedDuration', seconds); // Guarda la duración seleccionada
         }
 
         function startTest(event) {
@@ -229,26 +248,21 @@
                     endTest();
                 }
             }, 1000);
-
-            document.getElementById("timeLeft").innerText = duration;
-            document.getElementById("cpsDisplay").innerText = "0"; 
-            document.getElementById("scoreDisplay").innerText = "0"; 
         }
 
         function countClick(event) {
-            event.preventDefault();
             if (testActive) {
                 clickCount++;
-                const cps = (clickCount / Math.max(duration - timeLeft, 1)).toFixed(2);
+                const cps = (clickCount / duration).toFixed(2);
+                document.getElementById("clickCounter").innerText = `Clics: ${clickCount}`;
+                document.getElementById("cpsDisplay").innerText = cps; 
                 
-                document.getElementById("clickCounter").innerText = "Clics: " + clickCount;
-                document.getElementById("cpsDisplay").innerText = (cps === "NaN" ? "0.00" : cps);
-
-                const ripple = document.createElement("span");
-                ripple.classList.add("ripple");
-                ripple.style.left = `${event.clientX - event.target.getBoundingClientRect().left - 50}px`;
-                ripple.style.top = `${event.clientY - event.target.getBoundingClientRect().top - 50}px`;
-                event.target.appendChild(ripple);
+                // Efecto de ripple
+                const ripple = document.createElement("div");
+                ripple.className = "ripple";
+                ripple.style.left = `${event.clientX - 50}px`;
+                ripple.style.top = `${event.clientY - 50}px`;
+                document.body.appendChild(ripple);
                 setTimeout(() => {
                     ripple.remove();
                 }, 600);
@@ -258,18 +272,15 @@
         function endTest() {
             clearInterval(timer);
             testActive = false;
-            const averageCPS = (clickCount / duration).toFixed(2);
+            document.getElementById("clickButton").disabled = true;
             document.getElementById("totalClicks").innerText = clickCount;
-            document.getElementById("averageCPS").innerText = averageCPS;
+            document.getElementById("averageCPS").innerText = (clickCount / duration).toFixed(2);
             document.getElementById("modal").style.display = "flex";
-            document.getElementById("clickButton").disabled = true; 
         }
 
         function closeModal() {
             document.getElementById("modal").style.display = "none";
-            document.getElementById("clickCounter").innerText = "Duración: No seleccionada";
-            document.getElementById("statsDisplay").style.display = "none";
-            document.getElementById("clickButton").disabled = false;
+            location.reload(); // Reinicia la página
         }
     </script>
 </body>
