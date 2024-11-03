@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8393264368177983"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8393264368177983" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CpsTest.es</title>
-    <link rel="icon" href="cpstest.jpg" type="image/jpeg">
+    <title>CPS Test en Español | Clicks por Segundo</title>
+    <meta name="description" content="Mide cuántos clics por segundo puedes hacer con nuestro CPS Test en español. Prueba tus reflejos con opciones de 1, 3 y 5 segundos.">
+    <link rel="icon" href="cpstest.jpg" type="image/jpeg" alt="Ícono de prueba de clics por segundo">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
     <style>
         /* Estilos CSS */
@@ -41,7 +41,7 @@
             border-radius: 15px;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.3);
-            width: 500px; /* Aumenté aún más el ancho del contenedor */
+            width: 500px;
             margin-top: 100px;
             backdrop-filter: blur(10px);
         }
@@ -56,26 +56,26 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            background-color: #55efc4; /* Cambié el color del botón */
+            background-color: #55efc4;
             color: #fff;
             transition: 0.3s;
             outline: none;
             user-select: none;
         }
         .options button:hover {
-            background-color: #1dd1a1; /* Color al pasar el mouse */
+            background-color: #1dd1a1;
         }
         #clickButton {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 20px 50px; /* Reducido padding para que el botón sea más pequeño */
-            font-size: 22px; /* Tamaño de fuente más pequeño */
+            padding: 20px 50px;
+            font-size: 22px;
             font-weight: bold;
             border: none;
-            border-radius: 25px; 
-            background: linear-gradient(90deg, #ff7675, #ff6b81); /* Botón más atractivo */
+            border-radius: 25px;
+            background: linear-gradient(90deg, #ff7675, #ff6b81);
             color: #fff;
             cursor: pointer;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
@@ -85,8 +85,8 @@
             transition: background 0.3s, transform 0.2s;
         }
         #clickButton:hover {
-            background: linear-gradient(90deg, #e74c3c, #ff5a66); /* Hover del botón */
-            transform: translateX(-50%) scale(1.05); 
+            background: linear-gradient(90deg, #e74c3c, #ff5a66);
+            transform: translateX(-50%) scale(1.05);
         }
         #clickButton:disabled {
             background: #bbb;
@@ -171,12 +171,11 @@
             }
         }
     </style>
-
 </head>
 <body>
-    <h1>CpsTest.es</h1>
+    <h1>CPS Test - Clicks por Segundo</h1>
     <div class="container">
-        <h2>Test de Clicks por Segundo</h2>
+        <h2>Prueba tu velocidad de clics</h2>
         <p>Selecciona la duración y luego haz clic en "Iniciar"</p>
         
         <div class="options">
@@ -208,25 +207,24 @@
     <script>
         let clickCount = 0;
         let timer;
-        let duration = 3; // Establece la duración por defecto en 3 segundos
+        let duration = 3;
         let testActive = false;
         let timeLeft;
 
-        // Cargar la duración desde el almacenamiento local
         const savedDuration = localStorage.getItem('selectedDuration');
         if (savedDuration) {
             duration = parseInt(savedDuration, 10);
             document.getElementById("clickCounter").innerText = `Duración: ${duration} segundos`;
-            document.getElementById("defaultDuration").click(); // Selecciona el botón correspondiente
+            document.getElementById("defaultDuration").click();
         } else {
-            document.getElementById("defaultDuration").click(); // Configura por defecto en 3 segundos
+            document.getElementById("defaultDuration").click();
         }
 
         function setDuration(seconds) {
             duration = seconds;
             document.getElementById("clickCounter").innerText = `Duración: ${seconds} segundos`;
             document.getElementById("clickButton").disabled = false;
-            localStorage.setItem('selectedDuration', seconds); // Guarda la duración seleccionada
+            localStorage.setItem('selectedDuration', seconds);
         }
 
         function startTest(event) {
@@ -240,51 +238,56 @@
             timeLeft = duration;
             testActive = true;
             document.getElementById("clickCounter").innerText = "Clics: 0";
-            document.getElementById("clickButton").onmousedown = countClick; 
             document.getElementById("statsDisplay").style.display = "block";
 
             timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById("timeLeft").innerText = timeLeft;
-                
-                if (timeLeft <= 0) {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    document.getElementById("timeLeft").innerText = timeLeft;
+                } else {
                     endTest();
                 }
             }, 1000);
+
+            const button = document.getElementById("clickButton");
+            button.innerText = "¡Clic aquí!";
+            button.removeAttribute("disabled");
         }
 
-        function countClick(event) {
-            if (testActive) {
-                clickCount++;
-                const cps = (clickCount / duration).toFixed(2);
-                document.getElementById("clickCounter").innerText = `Clics: ${clickCount}`;
-                document.getElementById("cpsDisplay").innerText = cps; 
-                
-                // Efecto de ripple
-                const ripple = document.createElement("div");
-                ripple.className = "ripple";
-                ripple.style.left = `${event.clientX - 50}px`;
-                ripple.style.top = `${event.clientY - 50}px`;
-                document.body.appendChild(ripple);
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            }
+        function incrementClick(event) {
+            if (!testActive) return;
+
+            clickCount++;
+            document.getElementById("clickCounter").innerText = `Clics: ${clickCount}`;
+            document.getElementById("scoreDisplay").innerText = clickCount;
+            document.getElementById("cpsDisplay").innerText = (clickCount / duration).toFixed(2);
+
+            const ripple = document.createElement("span");
+            ripple.classList.add("ripple");
+            ripple.style.left = `${event.clientX - 50}px`;
+            ripple.style.top = `${event.clientY - 50}px`;
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
         }
 
         function endTest() {
             clearInterval(timer);
             testActive = false;
-            document.getElementById("clickButton").disabled = true;
+
+            const cps = (clickCount / duration).toFixed(2);
+            document.getElementById("averageCPS").innerText = cps;
             document.getElementById("totalClicks").innerText = clickCount;
-            document.getElementById("averageCPS").innerText = (clickCount / duration).toFixed(2);
             document.getElementById("modal").style.display = "flex";
+
+            document.getElementById("clickButton").innerText = "Iniciar";
+            document.getElementById("clickButton").disabled = true;
         }
 
         function closeModal() {
             document.getElementById("modal").style.display = "none";
-            location.reload(); // Reinicia la página
         }
+
+        document.getElementById("clickButton").addEventListener("click", incrementClick);
     </script>
 </body>
 </html>
